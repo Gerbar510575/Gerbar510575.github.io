@@ -19,6 +19,26 @@ Conduct exploratory data analysis to gain insights into the data. Include visual
 ## Model Building
 Outline the process of building machine learning or statistical models for the project. Describe the model selection, training, and hyperparameter tuning procedures. Include code snippets or references to notebooks where the model building process is documented.
 
+## Model
+
+**Key Concepts**
+
+1. Feature extractor
+
+In segmentation models, feature extractor layers are used throughout the network, allowing it to process spatial information efficiently. These layers capture local patterns and structures in the input data.
+
+2. Skip Connections
+
+To recover fine-grained details lost during downsampling, FCN uses skip connections. These connections combine feature maps from early layers with those from later layers, aiding in the reconstruction of high-resolution information.
+
+3. Upsampling
+
+Segmentation models employ upsampling techniques to restore the spatial resolution of the feature maps. Transposed convolutions or bilinear interpolation can be used for this purpose.
+
+#### U-net
+
+![image.png](attachment:663edfbf-dd6c-4e26-a2fe-46b2c8750b0c.png)
+
 ## Evaluation
 Evaluate the performance of the models using appropriate metrics and techniques. Discuss the strengths and limitations of the models and any insights gained from the evaluation process.
 

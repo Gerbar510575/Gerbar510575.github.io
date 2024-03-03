@@ -33,7 +33,7 @@ To recover fine-grained details lost during downsampling, FCN uses skip connecti
 
 Segmentation models employ upsampling techniques to restore the spatial resolution of the feature maps. Transposed convolutions or bilinear interpolation can be used for this purpose.
 
-<iframe src="https://wandb.ai/gerbarg8/GB20-HW4/reports/Deep-learning-in-medical-image-analysis_semantic-segmentation--Vmlldzo3MDA2NTEz" style="border:none;height:1024px;width:100%">
+[links](https://api.wandb.ai/links/gerbarg8/wmlbskls)
 
 #### U-net
 

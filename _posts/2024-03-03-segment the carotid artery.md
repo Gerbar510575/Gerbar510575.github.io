@@ -3,6 +3,8 @@
 ## Introduction
 Provide a brief introduction to the project, This project aims to develop predictive models to label carotid artery areas 
 of input sonography images, objectives, and any relevant background information.
+[Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard) (ranking: 3/31, testing accuracy: 0.96505)
+![](/images/ranking.png "My Kaggle Ranking")
 
 ## Data Preparation
 Describe the process of collecting or obtaining the data for the project. Include details such as the We had taken sonography videos from left and right necks of three volunteers. We randomly extracted 100 image frames from each volunteer’s video to from in total 300 training sonography images. The test data were taken from another volunteer and 100 test sonography images were created. We had asked several radiologists to label carotid artery area from each image frame.
@@ -256,6 +258,4 @@ Note: In practice, we often omit the metrics from the background!!
 5. **Training the model with more images (increasing from 240 to 270) might allow the model to better capture the characteristics of the images.**
 
 6. **Without the help of Cross Validation, it's impossible to know if there's a possibility of overfitting.**
-7. [Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard)
    
-

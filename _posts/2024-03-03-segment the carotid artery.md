@@ -1,25 +1,49 @@
 # Deep learning in medical image analysis_semantic segmentation
 
 ## Introduction
-Provide a brief introduction to the project, This project aims to develop predictive models to label carotid artery areas 
-of input sonography images, objectives, and any relevant background information.
-[Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard) (ranking: 3/31, testing accuracy: 0.96505)
+Deep learning models have shown remarkable success in medical image analysis tasks, including semantic segmentation.
+This project aims to develop predictive models to label carotid artery areas 
+of input sonography images which are obtained from EDA hospital.
+I used the deep learning framework Pytorch to do analysis and not only got the amazing testing dice accuracy of 0.96505 but also ranked the top three among students from Statistics, Computer Science background.
+[Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard) (ranking: 3/31, testing dice accuracy: 0.96505)
 ![](/images/ranking.png "My Kaggle Ranking")
 
 ## Data Preparation
-Describe the process of collecting or obtaining the data for the project. Include details such as the We had taken sonography videos from left and right necks of three volunteers. We randomly extracted 100 image frames from each volunteer’s video to from in total 300 training sonography images. The test data were taken from another volunteer and 100 test sonography images were created. We had asked several radiologists to label carotid artery area from each image frame.
+Sonography videos were taken from left and right necks of three volunteers. We randomly extracted 100 image frames from each volunteer’s video to form in total 300 training sonography images. The test data were taken from another volunteer and 100 test sonography images were created. Several radiologists to label carotid artery area from each image frame. 
 
+After collecting the 300 training images and 100 testing images, I present 16 images combined with mask(yellow portion) labeled by the experts.
+![](/images/artery.png "images with masks")
+Next, per image corresponding mask are transformed by resizing, normalizing and numericalizing into a tensor which is the standard data format used as an input of deep learning model.
+Then, Appropriate Dataloder are created for loading training data
 ```python
-# Example code block for data preparation
-The data preprocessing techniques including Run-Length Encoding (RLE) which is a simple and efficient method for representing segmented masks in computer vision and image processing. In the context of image segmentation, RLE is often used to compress and store binary masks, where each pixel is either part of the segmented object (foreground) or not (background).
+class DeepMedical(torch.utils.data.Dataset):
+    def __init__(self, images, transforms = None):
+        self.transforms = transforms   
+        
+        self.image_paths = images
+        self.mask_paths = [image.replace('pre', 'post') + '_ROI.bmp' for image in images]
+
+        
+    def __len__(self):
+        return len(self.image_paths)
+    
+    def __getitem__(self, idx):
+        
+        image_path = self.image_paths[idx]
+        mask_path = self.mask_paths[idx]
+        
+        image = np.array(Image.open(image_path).convert('RGB'))
+        mask = np.array(Image.open(mask_path)) * 1
+
+        if self.transforms:
+            transformed = self.transforms(image=image, mask=mask)
+            image, mask = transformed['image'], transformed['mask']
+            
+        return image, mask
 ```
 
-## Exploratory Data Analysis (EDA)
-![](/images/artery.png "fast.ai's logo")
-Conduct exploratory data analysis to gain insights into the data. Include visualizations and summary statistics to describe the data's characteristics, distributions, and relationships between variables.
-
 ## Model Building
-Outline the process of building machine learning or statistical models for the project. Describe the model selection, training, and hyperparameter tuning procedures. Include code snippets or references to notebooks where the model building process is documented.
+FCN model was first being used, however it's testing dice accuracy not surpassing 0.8 threshold. Thus, I turned into Unet model proposed by  . Especially, ResNet18 was used as encoder block and the decoder block follwed by original paper. Pre-trained model was deployed because of the small amount of data. Fine-tuning process was displayed visualizing in the wandb api dashboard. After tring the various combination of hyperparameter such as learning rate and weight decay etc. I used the set of parameter listed below as my hyperparamter setting. Include code snippets or references to notebooks where the model building process is documented.
 
 **Key Concepts**
 

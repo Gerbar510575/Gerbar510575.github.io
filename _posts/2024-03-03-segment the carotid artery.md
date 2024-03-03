@@ -242,9 +242,20 @@ Dice coefficient and IoU can be calculated by confusion matrix. Therefore, the i
 Note: In practice, we often omit the metrics from the background!!
 
 ## Conclusion
-Summarize the key findings and conclusions of the project. Reflect on the challenges faced, lessons learned, and potential future directions for the project.
+1. **Is it worth training for more epochs?**
+   - If the best performance of a short epoch is good, but the last one is not optimal, consider training for more epochs.
 
-## References
-List any references, datasets, libraries, or other resources used in the project.
+2. **Try different combinations of lr and wd?**
+   - There are infinite combinations, but with the visualization provided by wandb, it is easier to compare and understand the performance of each combination comprehensively and quickly.
 
+3. **Model predictions are exactly the same**
+   - If the predictions are identical, increasing the epochs may not improve the model's performance. Adjusting the learning rate might help to avoid getting stuck in a local minimum of the loss function.
+
+4. **Trying to use binary entropy loss always feels like it could lead to better performance in binary classification tasks, but due to time constraints, this attempt was not successful.**
+
+5. **Training the model with more images (increasing from 240 to 270) might allow the model to better capture the characteristics of the images.**
+
+6. **Without the help of Cross Validation, it's impossible to know if there's a possibility of overfitting.**
+7. [Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard)
+   
 

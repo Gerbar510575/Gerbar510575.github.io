@@ -13,6 +13,7 @@ The data preprocessing techniques including Run-Length Encoding (RLE) which is a
 ```
 
 ## Exploratory Data Analysis (EDA)
+![carotid artery](images/carotid artery.png)
 Conduct exploratory data analysis to gain insights into the data. Include visualizations and summary statistics to describe the data's characteristics, distributions, and relationships between variables.
 
 ## Model Building

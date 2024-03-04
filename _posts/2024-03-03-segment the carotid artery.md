@@ -210,7 +210,7 @@ The Dice Coefficient, also known as the F1 Score, is a measure of the similarity
 
 The formula for Dice Coefficient is given by:
 
-$$ Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|} $$
+$$Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|}$$
 
 where:
 - $X$ is the set of pixels in the predicted segmentation,
@@ -280,7 +280,7 @@ Dice coefficient and IoU can be calculated by confusion matrix. Therefore, the i
 
 **Output:**
 - The confusion matrix is updated and segmentation metrics are computed.
-- The $(i, j)-$terms of the $M$ represents class-i pixels classify to class-j
+- The $(i, j)-$ terms of the $M$ represents class-i pixels classify to class-j
 
 Note: In practice, we often omit the metrics from the background!!
 

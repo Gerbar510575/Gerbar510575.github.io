@@ -200,114 +200,87 @@ class DecoderBlock(nn.Module):
         return x
 ```
 
-<h2>Evaluation</h2>
+## Evaluation
 
-<p>Two commonly used metrics to evaluate the performance of segmentation algorithms are Dice Coefficient and Intersection over Union (IoU).</p>
+Two commonly used metrics to evaluate the performance of segmentation algorithms are Dice Coefficient and Intersection over Union (IoU).
 
-<h3>Dice Coefficient</h3>
+### Dice Coefficient
 
-<p>The Dice Coefficient, also known as the F1 Score, is a measure of the similarity between two sets. In the context of image segmentation, it is used to quantify the agreement between the predicted segmentation and the ground truth.</p>
+The Dice Coefficient, also known as the F1 Score, is a measure of the similarity between two sets. In the context of image segmentation, it is used to quantify the agreement between the predicted segmentation and the ground truth.
 
-<p>The formula for Dice Coefficient is given by:</p>
+The formula for Dice Coefficient is given by:
 
-$$ Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|} $$
+$$Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|}$$
 
-<p>where:</p>
-<ul>
-<li>X is the set of pixels in the predicted segmentation,</li>
-<li>Y is the set of pixels in the ground truth,</li>
-<li>|·| denotes the cardinality of a set (i.e., the number of elements).</li>
-</ul>
+where:
+- $X$ is the set of pixels in the predicted segmentation,
+- $Y$ is the set of pixels in the ground truth,
+- $|\cdot|$ denotes the cardinality of a set (i.e., the number of elements).
 
-<p>Dice Coefficient ranges from 0 to 1, where 1 indicates a perfect overlap between the predicted and ground truth segmentations.</p>
+Dice Coefficient ranges from 0 to 1, where 1 indicates a perfect overlap between the predicted and ground truth segmentations.
 
-<h3>Intersection over Union (IoU)</h3>
+### Intersection over Union (IoU)
 
-<p>IoU, also known as the Jaccard Index, is another widely used metric for segmentation evaluation. It measures the ratio of the intersection area to the union area between the predicted and ground truth segmentations.</p>
+IoU, also known as the Jaccard Index, is another widely used metric for segmentation evaluation. It measures the ratio of the intersection area to the union area between the predicted and ground truth segmentations.
 
-<p>The formula for IoU is given by:</p>
+The formula for IoU is given by:
 
-$$ IoU = \frac{|X \cap Y|}{|X \cup Y|} $$
+$$
+IoU = \frac{|X \cap Y|}{|X \cup Y|} 
+$$
 
-<p>where:</p>
-<ul>
-<li>X is the set of pixels in the predicted segmentation,</li>
-<li>Y is the set of pixels in the ground truth.</li>
-</ul>
+where:
+- $X$ is the set of pixels in the predicted segmentation,
+- $Y$ is the set of pixels in the ground truth.
 
-<p>Similar to Dice Coefficient, IoU ranges from 0 to 1, with 1 indicating a perfect overlap.</p>
+Similar to Dice Coefficient, IoU ranges from 0 to 1, with 1 indicating a perfect overlap.
 
-<img src="https://www.mathworks.com/help/vision/ref/jaccard.png" alt="IoU Image">
+![](https://www.mathworks.com/help/vision/ref/jaccard.png)
 
-<h3>Interpretation</h3>
+### Interpretation
 
-<ul>
-<li><strong>High Values:</strong> A higher Dice Coefficient or IoU indicates better segmentation performance, as it signifies a greater overlap between the predicted and ground truth regions.</li>
-<li><strong>Low Values:</strong> Lower values suggest poor segmentation accuracy, indicating a mismatch between the predicted and ground truth segmentations.</li>
-</ul>
+- **High Values**: A higher Dice Coefficient or IoU indicates better segmentation performance, as it signifies a greater overlap between the predicted and ground truth regions.
 
-<h3>Implementation</h3>
+- **Low Values**: Lower values suggest poor segmentation accuracy, indicating a mismatch between the predicted and ground truth segmentations.
 
-<p>Dice coefficient and IoU can be calculated by confusion matrix. Therefore, the initial step is to build an confusion matrix from scratch.</p>
+### Implementation
 
-<h4>Algorithm: Building Confusion Matrix $M$</h4>
+Dice coefficient and IoU can be calculated by confusion matrix. Therefore, the initial step is to build an confusion matrix from scratch.
 
-<p><strong>Input:</strong></p>
-<ul>
-<li>a: Target labels tensor</li>
-<li>b: Predicted labels tensor</li>
-<li>num_classes: Number of classes</li>
-</ul>
+**Algorithm: Building Confusion Matrix $M$**
 
-<p><strong>Procedure:</strong></p>
-<ol>
-<li>Initialize the confusion matrix (self.mat) if it is not already created:
-   <ul>
-      <li>Create a square matrix of zeros with shape (num_classes, num_classes) and dtype=torch.int64.</li>
-      <li>Place the matrix on the same device as the input tensor a.</li>
-   </ul>
-</li>
-<li>Update the confusion matrix using the update method:
-   <ol>
-      <li>Check for valid class indices:
-         <ul>
-            <li>Create a boolean mask k, where elements are True if a is in the range [0, num_classes) and False otherwise.</li>
-         </ul>
-      </li>
-      <li>Calculate indices for updating the confusion matrix:
-         <ul>
-            <li>Convert the valid elements of a and b to torch.int64 and calculate the indices using the formula n * a[k] + b[k], where n is the number of classes.
-               <ul>
-                  <li><strong>We represent class-i pixels classify to class-j as $\to n * i + j$</strong></li>
-               </ul>
-            </li>
-            <li>Increment the corresponding elements in the confusion matrix using torch.bincount.</li>
-         </ul>
-      </li>
-   </ol>
-</li>
-<li>Compute segmentation metrics using the compute method:
-   <ul>
-      <li>Convert the confusion matrix to a float tensor h.</li>
-      <li>Extract correct predictions along the diagonal of the matrix.</li>
-      <li>Compute metrics from $M$
-         <ul>
-            <li><code>acc</code> $\to M_{ii}/M_{i\cdot}$</li>
-            <li><code>global_acc</code> $\to sum(M_{ii})/M_{\cdot\cdot}$</li>
-            <li><code>dice</code> $\to \frac{2M_{ii}}{M_{i\cdot}+M_{\cdot i}}$</li>
-            <li><code>iou</code> $\to \frac{M_{ii}}{M_{i\cdot}+M_{\cdot i}-M_{ii}}$</li>
-         </ul>
-      </li>
-   </ul>
-</li>
-</ol>
+**Input:**
+- a: Target labels tensor
+- b: Predicted labels tensor
+- num_classes: Number of classes
 
-<p><strong>Output:</strong></p>
-<ul>
-<li>The confusion matrix is updated and segmentation metrics are computed.</li>
-<li>The $(i, j)-$terms of the $M$ represents class-i pixels classify to class-j</li>
-</ul>
+**Procedure:**
+1. Initialize the confusion matrix (self.mat) if it is not already created:
+   - Create a square matrix of zeros with shape (num_classes, num_classes) and dtype=torch.int64.
+   - Place the matrix on the same device as the input tensor `a`.
 
-<p>Note: In practice, we often omit the metrics from the background!!</p>
-</html>
+2. Update the confusion matrix using the update method:
+
+   a. Check for valid class indices:
+      - Create a boolean mask k, where elements are True if a is in the range [0, num_classes) and False otherwise.
+      
+   b. Calculate indices for updating the confusion matrix:
+      - Convert the valid elements of `a` and `b` to torch.int64 and calculate the indices using the formula n * a[k] + b[k], where n is the number of classes.
+         - **We represent class-i pixels classify to class-j as $\to n * i + j$**
+      - Increment the corresponding elements in the confusion matrix using torch.bincount.
+
+3. Compute segmentation metrics using the compute method:
+   - Convert the confusion matrix to a float tensor h.
+   - Extract correct predictions along the diagonal of the matrix.
+   - Compute metrics from $M$
+      - `acc` $\to M_{ii}/M_{i\cdot}$
+      - `global_acc` $\to sum(M_{ii})/M_{\cdot\cdot}$
+      - `dice` $\to \frac{2M_{ii}}{M_{i\cdot}+M_{\cdot i}}$
+      - `iou` $\to \frac{M_{ii}}{M_{i\cdot}+M_{\cdot i}-M_{ii}}$
+
+**Output:**
+- The confusion matrix is updated and segmentation metrics are computed.
+- The $(i, j)-$terms of the $M$ represents class-i pixels classify to class-j
+
+Note: In practice, we often omit the metrics from the background!!
 

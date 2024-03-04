@@ -201,9 +201,6 @@ class DecoderBlock(nn.Module):
 ```
 
 ## Evaluation
-Evaluate the performance of the models using appropriate metrics and techniques. Discuss the strengths and limitations of the models and any insights gained from the evaluation process.
-
-## Metrics
 
 Two commonly used metrics to evaluate the performance of segmentation algorithms are Dice Coefficient and Intersection over Union (IoU).
 

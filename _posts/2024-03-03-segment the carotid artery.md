@@ -283,5 +283,3 @@ Dice coefficient and IoU can be calculated by confusion matrix. Therefore, the i
 - The $(i, j)-$terms of the $M$ represents class-i pixels classify to class-j
 
 Note: In practice, we often omit the metrics from the background!!
-
-   

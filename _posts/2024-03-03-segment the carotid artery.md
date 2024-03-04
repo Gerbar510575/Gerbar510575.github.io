@@ -227,7 +227,7 @@ IoU, also known as the Jaccard Index, is another widely used metric for segmenta
 
 The formula for IoU is given by:
 
-\[ IoU = \frac{|X \cap Y|}{|X \cup Y|} \]
+Dice = 2 * (Intersection of X and Y) / (Size of X + Size of Y)
 
 where:
 - $X$ is the set of pixels in the predicted segmentation,

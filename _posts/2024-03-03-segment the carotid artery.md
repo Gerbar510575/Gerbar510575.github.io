@@ -200,10 +200,7 @@ class DecoderBlock(nn.Module):
         return x
 ```
 
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-## Evaluation
+## Metrics
 
 Two commonly used metrics to evaluate the performance of segmentation algorithms are Dice Coefficient and Intersection over Union (IoU).
 
@@ -216,9 +213,9 @@ The formula for Dice Coefficient is given by:
 $$ Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|} $$
 
 where:
-- \( X \) is the set of pixels in the predicted segmentation,
-- \( Y \) is the set of pixels in the ground truth,
-- \( |\cdot| \) denotes the cardinality of a set (i.e., the number of elements).
+- $X$ is the set of pixels in the predicted segmentation,
+- $Y$ is the set of pixels in the ground truth,
+- $|\cdot|$ denotes the cardinality of a set (i.e., the number of elements).
 
 Dice Coefficient ranges from 0 to 1, where 1 indicates a perfect overlap between the predicted and ground truth segmentations.
 
@@ -228,11 +225,13 @@ IoU, also known as the Jaccard Index, is another widely used metric for segmenta
 
 The formula for IoU is given by:
 
-$$ IoU = \frac{|X \cap Y|}{|X \cup Y|} $$
+$$
+IoU = \frac{|X \cap Y|}{|X \cup Y|} 
+$$
 
 where:
-- \( X \) is the set of pixels in the predicted segmentation,
-- \( Y \) is the set of pixels in the ground truth.
+- $X$ is the set of pixels in the predicted segmentation,
+- $Y$ is the set of pixels in the ground truth.
 
 Similar to Dice Coefficient, IoU ranges from 0 to 1, with 1 indicating a perfect overlap.
 
@@ -246,42 +245,42 @@ Similar to Dice Coefficient, IoU ranges from 0 to 1, with 1 indicating a perfect
 
 ### Implementation
 
-Dice coefficient and IoU can be calculated by confusion matrix. Therefore, the initial step is to build a confusion matrix from scratch.
+Dice coefficient and IoU can be calculated by confusion matrix. Therefore, the initial step is to build an confusion matrix from scratch.
 
-**Algorithm: Building Confusion Matrix \( M \)**
+**Algorithm: Building Confusion Matrix $M$**
 
 **Input:**
-- \( a \): Target labels tensor
-- \( b \): Predicted labels tensor
-- \( \text{num_classes} \): Number of classes
+- a: Target labels tensor
+- b: Predicted labels tensor
+- num_classes: Number of classes
 
 **Procedure:**
-1. Initialize the confusion matrix (\( M \)) if it is not already created:
-   - Create a square matrix of zeros with shape (\( \text{num_classes}, \text{num_classes} \)) and dtype=torch.int64.
-   - Place the matrix on the same device as the input tensor \( a \).
+1. Initialize the confusion matrix (self.mat) if it is not already created:
+   - Create a square matrix of zeros with shape (num_classes, num_classes) and dtype=torch.int64.
+   - Place the matrix on the same device as the input tensor `a`.
 
 2. Update the confusion matrix using the update method:
 
    a. Check for valid class indices:
-      - Create a boolean mask \( k \), where elements are True if \( a \) is in the range [0, num_classes) and False otherwise.
+      - Create a boolean mask k, where elements are True if a is in the range [0, num_classes) and False otherwise.
       
    b. Calculate indices for updating the confusion matrix:
-      - Convert the valid elements of \( a \) and \( b \) to torch.int64 and calculate the indices using the formula \( n \times a[k] + b[k] \), where \( n \) is the number of classes.
-         - **We represent class-i pixels classify to class-j as \( n \times i + j \)**
+      - Convert the valid elements of `a` and `b` to torch.int64 and calculate the indices using the formula n * a[k] + b[k], where n is the number of classes.
+         - **We represent class-i pixels classify to class-j as $\to n * i + j$**
       - Increment the corresponding elements in the confusion matrix using torch.bincount.
 
 3. Compute segmentation metrics using the compute method:
-   - Convert the confusion matrix to a float tensor \( h \).
+   - Convert the confusion matrix to a float tensor h.
    - Extract correct predictions along the diagonal of the matrix.
-   - Compute metrics from \( M \)
-      - `acc` \( \to M_{ii}/M_{i\cdot} \)
-      - `global_acc` \( \to \text{sum}(M_{ii})/M_{\cdot\cdot} \)
-      - `dice` \( \to \frac{2M_{ii}}{M_{i\cdot}+M_{\cdot i}} \)
-      - `iou` \( \to \frac{M_{ii}}{M_{i\cdot}+M_{\cdot i}-M_{ii}} \)
+   - Compute metrics from $M$
+      - `acc` $\to M_{ii}/M_{i\cdot}$
+      - `global_acc` $\to sum(M_{ii})/M_{\cdot\cdot}$
+      - `dice` $\to \frac{2M_{ii}}{M_{i\cdot}+M_{\cdot i}}$
+      - `iou` $\to \frac{M_{ii}}{M_{i\cdot}+M_{\cdot i}-M_{ii}}$
 
 **Output:**
 - The confusion matrix is updated and segmentation metrics are computed.
-- The \( (i, j)- \)terms of the \( M \) represents class-i pixels classify to class-j
+- The $(i, j)-$ terms of the $M$ represents class-i pixels classify to class-j
 
 Note: In practice, we often omit the metrics from the background!!
 

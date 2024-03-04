@@ -210,7 +210,9 @@ The Dice Coefficient, also known as the F1 Score, is a measure of the similarity
 
 The formula for Dice Coefficient is given by:
 
-$$Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|}$$
+$$
+Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|}
+$$
 
 where:
 - $X$ is the set of pixels in the predicted segmentation,

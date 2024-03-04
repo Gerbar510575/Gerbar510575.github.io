@@ -10,7 +10,7 @@ I used the deep learning model ResNet18 Unet under Pytorch framework to do the a
 
 ## Challenge
 1. **Choosing between Last or Best parameter setting?**
-   - After training each epoch, model parameters were logged and the best one was chosen in the condition that smallest validation loss. However, parameters from last epoch are not need to be the best on durning the whole training process. So, how to determine whether training with more epochs or staying in the best one is the trade-off between prediction accuracy and the time consumption.
+   - After training each epoch, model parameters were logged and the best one was chosen in the condition that smallest validation loss. However, parameters from last epoch are not need to be the best durning the whole training process. So, how to determine whether training with more epochs or staying in the best in the current epoch is the trade-off between prediction accuracy and the time consumption.
 
 2. **Try different combinations of hyperparameters?**
    - There are infinite combinations of hyperparameters, in my project I mainly focus on trying different combinations of learning rate and weight decay using grid search method. With the help of visualization provided by wandb, it is easier to compare and understand the performance of each combination comprehensively and quickly.

@@ -4,9 +4,29 @@
 Deep learning models have shown remarkable success in medical image analysis tasks, including semantic segmentation.
 This project aims to develop predictive models to label carotid artery areas 
 of input sonography images which are obtained from EDA hospital.
-I used the deep learning framework Pytorch to do analysis and not only got the amazing testing dice accuracy of 0.96505 but also ranked the top three among students from Statistics, Computer Science background.
-[Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard) (ranking: 3/31, testing dice accuracy: 0.96505)
-![](/images/ranking.png "My Kaggle Ranking")
+I used the deep learning framework Pytorch to do the analysis and not only got the amazing testing dice cofficient of 0.96505 but also ranked the top three among competitors from Statistics, Computer Science background.
+[Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard) (Ranking: 3/31, Testing Dice Cofficient: 0.96505)
+![](/images/ranking.png "My Competition Ranking")
+
+## Challenge
+1. **Choosing between Last or Best parameter setting?**
+   - After training each epoch, model parameters were logged and the best one was chosen in the condition that smallest validation loss. However, parameters from last epoch are not need to be the best on durning the whole training process. So, how to determine whether training with more epochs or staying in the best one is the trade-off between prediction accuracy and the time consumption.
+
+2. **Try different combinations of hyperparameters?**
+   - There are infinite combinations of hyperparameters, in my project I mainly focus on trying different combinations of learning rate and weight decay using grid search method. With the help of visualization provided by wandb, it is easier to compare and understand the performance of each combination comprehensively and quickly.
+
+3. **Validation loss remain the same in the each training epoch**
+   - I encounter the problem of the not declined validation loss. The predictions are identical, increasing the epochs may not improve the model's performance. Trying the different learning rate help to avoid getting stuck in a local minimum of the loss function. 
+
+4. Trying to use binary entropy loss always feels like it could lead to better performance in binary classification tasks, but due to time constraints, this attempt was not successful, instead common cross entropy loss was used as a criterion for computing loss.
+
+5. Because the characteristic of this set of images, training the model with more images (increasing from 240 to 270) allow the model to better capture the characteristics of the images.
+
+6. Without the help of Cross Validation, it's impossible to know if there's a possibility of overfitting.
+7. Due to the lack of data, data augmentation may help to enhance training result.
+
+
+
 
 ## Data Preparation
 Sonography videos were taken from left and right necks of three volunteers. We randomly extracted 100 image frames from each volunteer’s video to form in total 300 training sonography images. The test data were taken from another volunteer and 100 test sonography images were created. Several radiologists to label carotid artery area from each image frame. 
@@ -53,7 +73,7 @@ In segmentation models, feature extractor layers are used throughout the network
 
 2. Skip Connections
 
-To recover fine-grained details lost during downsampling, FCN uses skip connections. These connections combine feature maps from early layers with those from later layers, aiding in the reconstruction of high-resolution information.
+To recover fine-grained details lost during downsampling, Unet uses skip connections. These connections combine feature maps from early layers with those from later layers, aiding in the reconstruction of high-resolution information.
 
 3. Upsampling
 
@@ -267,19 +287,4 @@ Dice coefficient and IoU can be calculated by confusion matrix. Therefore, the i
 
 Note: In practice, we often omit the metrics from the background!!
 
-## Conclusion
-1. **Is it worth training for more epochs?**
-   - If the best performance of a short epoch is good, but the last one is not optimal, consider training for more epochs.
-
-2. **Try different combinations of lr and wd?**
-   - There are infinite combinations, but with the visualization provided by wandb, it is easier to compare and understand the performance of each combination comprehensively and quickly.
-
-3. **Model predictions are exactly the same**
-   - If the predictions are identical, increasing the epochs may not improve the model's performance. Adjusting the learning rate might help to avoid getting stuck in a local minimum of the loss function.
-
-4. **Trying to use binary entropy loss always feels like it could lead to better performance in binary classification tasks, but due to time constraints, this attempt was not successful.**
-
-5. **Training the model with more images (increasing from 240 to 270) might allow the model to better capture the characteristics of the images.**
-
-6. **Without the help of Cross Validation, it's impossible to know if there's a possibility of overfitting.**
    

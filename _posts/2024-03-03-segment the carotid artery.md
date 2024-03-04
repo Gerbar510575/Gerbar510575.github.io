@@ -210,9 +210,7 @@ The Dice Coefficient, also known as the F1 Score, is a measure of the similarity
 
 The formula for Dice Coefficient is given by:
 
-$$
-Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|}
-$$
+$$ Dice = \frac{2 \times |X \cap Y|}{|X| + |Y|} $$
 
 where:
 - $X$ is the set of pixels in the predicted segmentation,
@@ -227,7 +225,9 @@ IoU, also known as the Jaccard Index, is another widely used metric for segmenta
 
 The formula for IoU is given by:
 
-Dice = 2 * (Intersection of X and Y) / (Size of X + Size of Y)
+$$
+IoU = \frac{|X \cap Y|}{|X \cup Y|} 
+$$
 
 where:
 - $X$ is the set of pixels in the predicted segmentation,

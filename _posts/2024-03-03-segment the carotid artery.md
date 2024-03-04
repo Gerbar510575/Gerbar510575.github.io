@@ -4,7 +4,7 @@
 Deep learning models have shown remarkable success in medical image analysis tasks, including semantic segmentation.
 This project aims to develop predictive models to label carotid artery areas 
 of input sonography images which are obtained from EDA hospital.
-I used the deep learning framework Pytorch to do the analysis and not only got the amazing testing dice cofficient of 0.96505 but also ranked the top three among competitors from Statistics, Computer Science background.
+I used the deep learning model ResNet18 Unet under Pytorch framework to do the analysis and not only got the amazing testing dice cofficient of 0.96505 but also ranked the top three among competitors from Statistics, Computer Science background.
 [Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard) (Ranking: 3/31, Testing Dice Cofficient: 0.96505)
 ![](/images/ranking.png "My Competition Ranking")
 

@@ -1,12 +1,7 @@
-# Natural language processing_FOMC Minutes
+# 混合自迴歸面板模型之個體效應探討
 
 ## Introduction
-Deep learning models have shown remarkable success in medical image analysis tasks, including semantic segmentation.
-This project aims to develop predictive models to label carotid artery areas 
-of input sonography images which are obtained from EDA hospital.
-I used the deep learning model ResNet18 Unet under Pytorch framework to do the analysis and not only got the amazing testing dice cofficient of 0.96505 but also ranked the top three among competitors from Statistics, Computer Science background.
-[Kaggle Competition](https://www.kaggle.com/competitions/mia-hw4/leaderboard) (Ranking: 3/31, Testing Dice Cofficient: 0.96505)
-![](/images/ranking.png "My Competition Ranking")
+本研究的動機，出於對極右翼政治立場政黨 "Alternative für Deutschland" （AfD） 在 2025 年德國聯邦議院選舉 (Bundestagswahl 2025) ，以 20.6 選區得票率、20.8 政黨得票率的表現，一舉躍升為第21 屆聯邦議會 (the 21st Bundestag) 第二大黨，這個現象的好奇。而之所以感興趣，正是因為百年前於 1930 年第五屆德意志國國會選舉，希特勒 (Adolf Hitler) 領導的極右翼政治立場政黨納粹黨 (Nationalsozialistische Deutsche Arbeiterpartei) 就是以 18.25 得票率表現，一舉躍升為國會第二大黨。然而，極右翼政黨興起的成因錯綜複雜，我們觀察德國 16 邦於2025 年德國聯邦議院選舉，各邦得票率最高之政黨示意圖，發現存在 AfD 於前東德五邦中的支持率遠高過前西德各邦的現象。因此，本研究將以「前東德/前西德」這個角度切入分析極右翼政黨興起的成因。
 
 ## Challenge
 1. **Choosing between Last or Best parameter setting?**

@@ -1,4 +1,70 @@
-# Deep learning in medical image analysis_semantic segmentation
+# 深度學習方法解決醫學影像實務問題之流程
+
+## 1. 現實問題之釐清
+- 本專案旨在自動從頸部超音波影像中標註頸動脈區域，以協助醫師進行非侵入式、快速且準確的血管判讀。
+- 該任務屬於典型的**語義分割問題（semantic segmentation）**，需要為輸入影像中每一個像素預測其是否屬於頸動脈。
+- 本任務源自課堂作業：提供三位受試者的頸部超音波影片，從中各擷取 100 張影格作為訓練資料，另提供另一位受試者影像 100 張作為測試資料。
+- 所有影像皆經由放射科醫師標註頸動脈區域，作為訓練時的標籤資料。
+
+## 2. 轉換成深度學習問題
+- 任務定義：輸入為 RGB 超音波影像，輸出為與影像等尺寸的二值遮罩圖（1 為頸動脈區域，0 為背景）。
+- 本專案同時實作兩種模型：
+  - FCN-8s（具 skip connection 機制）
+  - U-Net（醫學影像常用架構）
+- 預測準確度以 **Dice coefficient** 作為指標，並作為 Kaggle 評分依據。
+- 使用交叉熵損失函數（CrossEntropyLoss）進行監督式訓練。
+
+## 3. 資料蒐集與前處理
+- 訓練資料來自 `train/pre` 資料夾（影像）與 `train/post`（標註遮罩），測試資料來自 `test/pre`。
+- 每張影像之對應遮罩名稱為 `(原檔名)_ROI.bmp`。
+- 使用 `train.csv` 與 `test.csv` 對應影像檔名與預測輸出命名。
+- 資料增強與標準化流程：
+  - 調整尺寸至固定大小（如 448x448）
+  - Normalize（使用 ImageNet 預設均值與標準差）
+  - Tensor 化（使用 `ToTensorV2()`）
+
+## 4. 資料探索 (EDA)
+### 4.1 資料分佈與可視化
+- 將訓練影像與遮罩重疊視覺化，檢查遮罩貼合品質與異常。
+- 標註區域大多集中於中央橫條紋狀區域，符合理論上頸動脈所在位置。
+- 樣本變異度適中，未見嚴重偏態。
+
+### 4.2 訓練樣本劃分
+- 將 300 張訓練影像劃分為 80% 訓練集、20% 驗證集，使用固定 seed 保證可重現。
+- 使用 `SonoDataset` 包裝索引抽樣，確保相同資料不同切分不重複使用。
+
+## 5. 模型建構與訓練
+### 5.1 模型設計
+- **FCN-8s**
+  - 使用多層 CNN 卷積與 max pooling 下採樣後，利用 skip connection 結合不同尺度特徵圖，並透過 transpose convolution 還原輸出尺寸。
+- **U-Net**
+  - Encoder-Decoder 架構，結合對稱 encoder 與 decoder 並有跨層連結（concatenate），強化空間定位資訊。
+  - Backbone 採用 `ResNet18`，DecoderBlock 實作反卷積與卷積層混合模組。
+
+### 5.2 訓練設定
+- 批次大小：8 或 16（Kaggle Sweep 測試）
+- Optimizer：Adam（lr = 5e-5, weight decay = 1e-8）
+- Epoch：10
+- 使用 `wandb` 記錄訓練過程與指標（Loss、Dice、mIoU）
+- 儲存最佳模型檢核點（best_ckpt.pth）與最後一輪模型（last_ckpt.pth）
+
+## 6. 模型評估與視覺化
+- 驗證指標包括：
+  - 全域準確率（global accuracy）
+  - 平均 IoU（mean IoU）
+  - 平均 Dice Score（mean Dice）
+- 額外可視化圖包含：
+  - 原圖
+  - Ground Truth Mask
+  - 模型預測機率圖
+  - 預測二值圖（閾值 0.5）
+  - 錯誤融合圖（紅：FP、綠：TP、藍：FN）
+
+## 7. 是否解決現實問題？
+- 在 Kaggle 測試集上，模型於 Dice Score 可達 0.87 左右，展現頗佳的 segmentation 能力。
+- 可於臨床應用中協助醫師快速初步判讀頸動脈狹窄或病變位置。
+- 模型訓練參數可壓至百萬級（~6M），可於嵌入式系統或邊緣裝置上運行。
+- 未來可延伸至即時影片解析，搭配滑動視窗完成即時血管追蹤。
 
 ## Introduction
 Deep learning models have shown remarkable success in medical image analysis tasks, including semantic segmentation.

@@ -20,13 +20,19 @@
 
 ## 4、資料探索 (EDA)
 ### 4.1 視覺化
-    \item \textbf{民粹與本土意識形態變數}
-    
-    首先，從表~\ref{tab:var_summary} 中可知，衡量文化融合（Cultural Integration）、移民政策（Immigration Policy）、國家情緒（National Sentiment）與強人領導支持（Strong Leadership Support）四個變數的分布圖（見圖~\ref{fig:pca_var_distribution}）均呈現負偏態分布。接續以多類序相關（polychoric correlation）為基礎進行主成分分析（PCA），取第一主成分中各變數的因子負荷量乘上該變數之里克特 (Likert) 數值，再將所得分數標準化，作為本研究的應變數（即\textit{標準化 PCA 分數}）。圖~\ref{fig:LinePlotwithConfidenceBands} 呈現全體樣本於六個觀測期的 \textit{標準化 PCA 分數} 時間序列平均走勢，可觀察到於第三與第四期間出現顯著上升，顯示研究期間民粹與本土意識形態強化的趨勢。
-![](/images/minute.png "Attendance info should be truncated before NLP")
-![](/images/minute.png "Attendance info should be truncated before NLP")
-![](/images/minute.png "Attendance info should be truncated before NLP")
-![](/images/minute.png "Attendance info should be truncated before NLP")
+#### 民粹與本土意識形態變數
+- 首先，衡量文化融合（Cultural Integration）、移民政策（Immigration Policy）、國家情緒（National Sentiment）與強人領導支持（Strong Leadership Support）四個變數的分布均呈現負偏態分布。
+- 接續以多類序相關（polychoric correlation）為基礎進行主成分分析（PCA），取第一主成分中各變數的因子負荷量乘上該變數之里克特 (Likert) 數值，再將所得分數標準化，作為本研究的應變數（即 **標準化 PCA 分數**）。圖呈現全體樣本於六個觀測期的 **標準化 PCA 分數** 時間序列平均走勢，可觀察到於第三與第四期間出現顯著上升，顯示研究期間民粹與本土意識形態強化的趨勢。
+![](/images/pca_var_distribution.png)
+![](/images/LinePlotwithConfidenceBands.png)
+
+#### 居住地位於前東德／前西德地區變數
+本研究將受訪者所填報的居住邦別依據歷史地理位置劃分為前東德與前西德。凡居住於五個前東德邦者標記為「前東德居民」，居住於十一個前西德邦（含柏林）者則標記為「前西德居民」。下圖按地區分別繪出前東德與前西德樣本於六個觀測期的 **標準化 PCA 分數** 平均走勢：左圖為前西德地區，右圖為前東德地區。結果顯示，東德樣本在整個觀測期間的平均分數皆高於西德，且其變異程度也較大，顯示前東德居民的民粹與本土意識形態水準不僅較高，且變化幅度亦較顯著。
+![](/images/LinePlotwithConfidenceBandsbyRegion.png)
+
+#### 控制變數 (CPI)
+下圖顯示德國聯邦統計局發布的消費者物價指數（CPI）年對年變動百分比。對照研究所使用的觀測期間，可見德國當時正逐步走出嚴重的通貨膨脹階段，年增率亦呈下降趨勢。然而，為更真實反映物價累積變化對消費者心理的影響，本研究進一步將年增率轉換為以 2020 年為基期的 CPI 指數，作為外生解釋變數，以捕捉物價變動的長期趨勢。
+![](/images/cpi-rate-of-change-month.png)
 ### 4.2 初步模型配適
 
 ## 5、配適混合自迴歸面板模型 (自行復刻的演算法)

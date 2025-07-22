@@ -1,3 +1,152 @@
+---
+title: 深度學習方法解決醫學影像實務問題之流程
+math: true
+---
+
+# 深度學習方法解決醫學影像實務問題之流程
+
+## 1. 現實問題之釐清
+本專案聚焦於頸動脈超音波影像的語義分割任務，目標為**自動標註頸動脈所在區域**，以協助臨床診斷動脈狹窄或阻塞等病變。
+
+資料來源為醫院實際收集的頸部超音波影片，由放射科醫師進行逐張標註，提供高品質的標籤資料。
+
+本任務為二元分類的語義分割問題，訓練模型以像素級方式判斷每個點是否屬於頸動脈區域。
+
+專案透過 Kaggle 平台進行競賽，我使用 `ResNet18-Unet` 架構，在 31 組競爭者中獲得第 3 名，最終測試集 Dice 指標為 **0.96505**。
+
+> 🎖 [Kaggle 競賽連結](https://www.kaggle.com/competitions/mia-hw4/leaderboard) (排名：3/31，Testing Dice = 0.96505)
+
+![](/images/ranking.png)
+
+---
+
+## 2. 模型開發過程中的挑戰與思考
+1. **Last vs. Best Model 的取捨**  
+   - 每個 epoch 訓練結束後會儲存參數，但最後一輪的參數未必最佳，因此以 validation loss 最低為準保留最佳參數。
+
+2. **超參數調整**  
+   - 使用 grid search 嘗試不同 learning rate 與 weight decay 組合，並結合 wandb 進行視覺化比較與分析。
+
+3. **Validation loss 不下降**  
+   - 模型表現停滯、預測結果無變化。調整 learning rate 有助避免陷入局部極小值。
+
+4. **交叉熵 vs. 二元交叉熵**  
+   - 雖然 Binary Cross Entropy 更符合任務性質，但因時間限制採用 CrossEntropyLoss，結果仍佳。
+
+5. **增加訓練資料數量**  
+   - 從 240 張擴增為 270 張影像，有助提升模型對影像特徵的捕捉能力。
+
+6. **缺乏交叉驗證與資料增強**  
+   - 未實施 K-fold cross-validation，增加資料增強策略可進一步避免 overfitting。
+
+---
+
+## 3. 資料蒐集與前處理
+三位志願者左右頸部共錄製六段影片，各隨機擷取 100 張影像，總計訓練集 300 張。測試集來自第四位志願者，共 100 張影像。
+
+訓練影像與對應遮罩分別儲存於 `/train/pre` 與 `/train/post` 資料夾中，遮罩命名為 `(原始檔名)_ROI.bmp`。
+
+前處理步驟包括：
+- Resize 至固定尺寸（如 448×448）
+- Normalize（使用 ImageNet mean/std）
+- Tensor 化（`ToTensorV2`）
+
+![](/images/artery.png)
+
+---
+
+## 4. 模型建構與訓練
+
+### 4.1 模型選擇
+- 初期嘗試 FCN-8s，但測試 Dice 僅約 0.8，表現不佳。
+- 最終採用 **ResNet18-Unet** 架構，利用預訓練權重提升學習效率，並 fine-tune 於本任務。
+
+### 4.2 模型概念說明
+
+1. **特徵萃取器（Feature Extractor）**  
+   CNN 捕捉局部結構，進行多層下採樣抽取語義特徵。
+
+2. **跳接連結（Skip Connections）**  
+   從 encoder 低層抽出的特徵與 decoder 對應層結合，補足空間資訊。
+
+3. **上採樣（Upsampling）**  
+   使用 Transposed Convolution 回復空間解析度，重建 segmentation mask。
+
+![](/images/UNET.png)
+
+### 4.3 超參數設定（最佳組合）
+
+| 參數         | 設定值      |
+|--------------|-------------|
+| Learning Rate | 5e-5        |
+| Weight Decay  | 1e-8        |
+| Epochs        | 10          |
+| Batch Size    | 8 或 16     |
+| Optimizer     | Adam        |
+| Loss Function | CrossEntropyLoss |
+| Scheduler     | 固定學習率 |
+
+---
+
+## 5. 評估指標與實作
+
+### Dice Coefficient（F1 Score）
+
+衡量預測遮罩與真實遮罩的重疊程度：
+
+$$
+\text{Dice} = \frac{2 \cdot |X \cap Y|}{|X| + |Y|}
+$$
+
+- $X$：預測為正類的像素集合  
+- $Y$：實際為正類的像素集合  
+
+### IoU（Intersection over Union）
+
+又稱 Jaccard Index：
+
+$$
+\text{IoU} = \frac{|X \cap Y|}{|X \cup Y|}
+$$
+
+![](https://www.mathworks.com/help/vision/ref/jaccard.png)
+
+---
+
+### Confusion Matrix 與指標公式
+
+以 $M$ 表示混淆矩陣，$M_{ij}$ 表示將類別 $i$ 判為類別 $j$ 的像素數。
+
+- Accuracy：
+  $$
+  \text{Accuracy} = \frac{\sum_i M_{ii}}{\sum_{i,j} M_{ij}}
+  $$
+
+- Dice：
+  $$
+  \text{Dice}_i = \frac{2 M_{ii}}{\sum_j M_{ij} + \sum_j M_{ji}}
+  $$
+
+- IoU：
+  $$
+  \text{IoU}_i = \frac{M_{ii}}{\sum_j M_{ij} + \sum_j M_{ji} - M_{ii}}
+  $$
+
+指標可透過 `ConfusionMatrix` 類別實作，並以 `update()` 與 `compute()` 動態更新。
+
+---
+
+## 6. 是否解決現實問題？
+
+模型在測試集上達成 **Dice = 0.96505**，表現卓越，可應用於臨床影像輔助診斷與分析流程。
+
+模型參數量約 6M，計算資源需求低，適合部署於邊緣裝置進行即時推論。
+
+---
+
+> 📌 本專案整合資料處理、模型設計、視覺化與準確度評估流程，具高度可重現性與實用性，適合作為醫療影像深度學習應用的實戰範例。
+
+
 # 深度學習方法解決醫學影像實務問題之流程
 
 ## 1. 現實問題之釐清

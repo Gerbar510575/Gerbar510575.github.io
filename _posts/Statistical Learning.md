@@ -3,9 +3,9 @@
 ## 1.現實問題之釐清
 - 本研究的動機，出於對極右翼政治立場政黨 "Alternative für Deutschland" （AfD） 在 2025 年德國聯邦議院選舉 (Bundestagswahl 2025) ，以 20.6 選區得票率、20.8 政黨得票率的表現，一舉躍升為第 21 屆聯邦議會 (the 21st Bundestag) 第二大黨，這個現象的好奇。
 - 之所以感興趣，正是因為百年前於 1930 年第五屆德意志國國會選舉，希特勒 (Adolf Hitler) 領導的極右翼政治立場政黨納粹黨 (Nationalsozialistische Deutsche Arbeiterpartei) 就是以 18.25 得票率表現，一舉躍升為國會第二大黨。
-- 然而，極右翼政黨興起的成因錯綜複雜，我們觀察德國 16 邦於 2025 年德國聯邦議院選舉，各邦得票率最高之政黨示意圖，發現存在 AfD 於前東德五邦中的支持率遠高過前西德各邦的現象。因此，本研究將以 **「前東德/前西德」這個角度切入分析極右翼政黨興起的成因**。
+- 然而，極右翼政黨興起的成因錯綜複雜，我們觀察德國 16 邦於 2025 年德國聯邦議院選舉，各邦得票率最高之政黨示意圖 (見下圖)，發現存在 AfD 於前東德五邦中的支持率遠高過前西德各邦的現象。因此，本研究將以 **「前東德/前西德」這個角度切入分析極右翼政黨興起的成因**。
 
-![圖一](/images/2025_German_federal_election_States.svg.png "德國 16 邦於 2025 年德國聯邦議院選舉之各邦得票率最高之政黨示意圖")
+![](/images/2025_German_federal_election_States.svg.png)
 ## 2.轉換成統計問題
 - 過往許多文獻從不同領域不同層面討論造成 AfD 於前東德/前西德邦支持率差異的原因。其中，Götzel 對 2021 年德國官方蒐集的 GLES 資料，使用邏輯斯迴歸驗證「居住地位於前東德/前西德」因素，是否會對「支持 AfD 政黨與否」二元應變數，具有顯著的影響？
 - 研究結果顯示，儘管在控制住主觀、客觀經濟變數、宗教教派變數、性別年齡變數以及民粹 (populist) 意識形態變數後，居住於前東德的選民，仍舊相較於其前西德同胞，平均上來說，統計上顯著地高出百分之 4.4 的機率支持 AfD。再多控制住一個本土 (nativist) 意識形態變數後，依然也還有高出百分之 3.2 的機率支持 AfD。
@@ -20,6 +20,9 @@
 
 ## 4、資料探索 (EDA)
 ### 4.1 視覺化
+    \item \textbf{民粹與本土意識形態變數}
+    
+    首先，從表~\ref{tab:var_summary} 中可知，衡量文化融合（Cultural Integration）、移民政策（Immigration Policy）、國家情緒（National Sentiment）與強人領導支持（Strong Leadership Support）四個變數的分布圖（見圖~\ref{fig:pca_var_distribution}）均呈現負偏態分布。接續以多類序相關（polychoric correlation）為基礎進行主成分分析（PCA），取第一主成分中各變數的因子負荷量乘上該變數之里克特 (Likert) 數值，再將所得分數標準化，作為本研究的應變數（即\textit{標準化 PCA 分數}）。圖~\ref{fig:LinePlotwithConfidenceBands} 呈現全體樣本於六個觀測期的 \textit{標準化 PCA 分數} 時間序列平均走勢，可觀察到於第三與第四期間出現顯著上升，顯示研究期間民粹與本土意識形態強化的趨勢。
 ![](/images/minute.png "Attendance info should be truncated before NLP")
 ![](/images/minute.png "Attendance info should be truncated before NLP")
 ![](/images/minute.png "Attendance info should be truncated before NLP")

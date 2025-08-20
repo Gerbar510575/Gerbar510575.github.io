@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.sqlite3
+parking_data.db
+.DS_Store
+.env

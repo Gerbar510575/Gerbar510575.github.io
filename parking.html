@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>即時路邊車位查詢</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    #map { height: 100vh; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // 1. 初始化地圖
+    const map = L.map('map').setView([25.0478, 121.5319], 15);
+
+    // 2. 加入 OpenStreetMap 圖磚
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // 3. 地理編碼函式：將地址轉換成經緯度
+    async function geocodeAddress(address) {
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&countrycodes=TW`;
+        const res = await fetch(url, {
+          headers: {
+            'User-Agent': 'TDX-Parking-App/1.0 (gerbarg8-8ed9452a-9756-4e2d@gmail.com)'
+          }
+        });
+        const data = await res.json();
+        if (data.length > 0) {
+          return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+        }
+      } catch (error) {
+        console.error("地理編碼失敗:", error);
+      }
+      return null;
+    }
+
+    // 4. 處理並顯示車位資料
+    function showParking(data) {
+      if (window.parkingLayer) window.parkingLayer.clearLayers();
+      else window.parkingLayer = L.layerGroup().addTo(map);
+
+      data.forEach(p => {
+        if (p.lat && p.lng && p.remain !== null) {
+            const color = p.remain > 0 ? "green" : "red";
+            L.circleMarker([p.lat, p.lng], { color: color, radius: 8 })
+              .addTo(window.parkingLayer)
+              .bindPopup(`<b>${p.name}</b><br>剩餘車位：${p.remain}`);
+        }
+      });
+    }
+
+    // 5. 從後端 API 抓取資料並進行地理編碼
+    async function loadParking() {
+      try {
+        console.log("正在發出 API 請求...");
+        const res = await fetch("http://127.0.0.1:5000/parking_spots");
+        console.log("API 請求成功，狀態碼:", res.status);
+        const apiData = await res.json();
+
+        console.log("從後端取得的原始資料：", apiData);
+
+        // 對每個停車路段進行地理編碼
+        const geocodedData = [];
+        for (const item of apiData) {
+          const coords = await geocodeAddress(item.name + ', 台北市');
+          if (coords) {
+            geocodedData.push({
+              name: item.name,
+              lat: coords.lat,
+              lng: coords.lng,
+              remain: item.remain
+            });
+          }
+        }
+        
+        showParking(geocodedData);
+      } catch(err) {
+        console.error("抓取或處理資料失敗", err);
+      }
+    }
+
+    loadParking();
+    setInterval(loadParking, 20000); // 每分鐘更新一次
+  </script>
+</body>
+</html>

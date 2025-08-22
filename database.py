@@ -1,7 +1,7 @@
 import sqlite3
 import datetime
 
-DB_FILE = 'parking_data.db'
+DB_FILE = 'ZSNR.db'
 
 def connect_db():
     """建立資料庫連線"""

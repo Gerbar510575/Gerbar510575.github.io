@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - TDX_APP_ID=gerbarg8-8ed9452a-9756-4e2d
+      - TDX_APP_KEY=5f56ce95-d8ab-44d9-848a-c6d62104d09c

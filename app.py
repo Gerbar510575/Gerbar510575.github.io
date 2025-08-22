@@ -2,16 +2,17 @@ from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
 import database # 導入我們剛剛建立的資料庫模組
+import os
 
 app = Flask(__name__, static_folder='static')
 CORS(app)
 
 # 設定您的 TDX 應用程式 ID 和金鑰
-app_id = 'gerbarg8-8ed9452a-9756-4e2d'
-app_key = 'dae2042c-7f98-49f1-b574-534109bcc135'
+app_id = os.environ.get('TDX_APP_ID')
+app_key = os.environ.get('TDX_APP_KEY')
 
 auth_url = "https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token"
-availability_data_url = "https://tdx.transportdata.tw/api/basic/v1/Parking/OnStreet/ParkingSegmentAvailability/City/Taipei?%24top=10&%24format=JSON"
+availability_data_url = "https://tdx.transportdata.tw/api/basic/v1/Parking/OnStreet/ParkingSegmentAvailability/City/Taipei?%24top=33&%24format=JSON"
 
 def get_auth_header():
     # 您的 TDX 認證邏輯...
